@@ -1,16 +1,37 @@
 import LoginForm from "@/components/pages/auth/login-form";
 import Link from "next/link";
+import {AspectRatio} from "@/components/ui/aspect-ratio";
+import Image from "next/image";
+import {Fragment} from "react";
+import {Title} from "@/components/shared/title";
 
 export default function LoginPage() {
     return (
-        <main className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-4 text-center">ورود به حساب کاربری</h1>
-                <LoginForm />
-                <p className="mt-4 text-center">
-                    حساب ندارید? <Link href="/register" className="text-blue-600">ثبت نام</Link>
-                </p>
+        <Fragment>
+            <div className={'tex-white flex-center flex-col'}>
+                <Title className={'text-white text-[30px] lg:text-[60px]'}>
+                    Sign in to your Account
+                </Title>
+                <Title className={'!text-white text-16 lg:text-24'}>
+                    Don’t have an account? <Link className={'text-blue-700 text-14 lg:text-24'} href={'/register'}>Sign
+                    Up</Link>
+                </Title>
             </div>
-        </main>
+            <div
+                className="max-w-[1053px] bg-transparent lg:bg-[#F0F0F3] pt-20 rounded-20 overflow-hidden lg:pt-0 w-full flex-center lg:h-[649px] gap-5">
+                <div className={'max-w-[360px] w-full p-8'}>
+                    <LoginForm/>
+                    <p className="mt-4 text-center">
+                        <Link href="/register" className="text-blue-600"></Link>
+                    </p>
+                </div>
+                <AspectRatio className={'aspect-square relative w-full h-full hidden lg:block'}>
+                    <Image src={'/assets/login.png'} className={'aspect-square object-cover w-full h-full'} priority
+                           fill
+                           sizes={'80svw'}
+                           alt={'login bg'}/>
+                </AspectRatio>
+            </div>
+        </Fragment>
     );
 }

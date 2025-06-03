@@ -7,6 +7,7 @@ import TextInput from '@/components/ui/text-input';
 import {Loader2} from 'lucide-react';
 import {cn} from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
+import {AuthRoutes} from "@/api/auth-routes";
 
 export type ChangePasswordType = {
     old_password: string;
@@ -37,13 +38,13 @@ export default function ChangePasswordForm({className}: { className?: string }) 
 
         try {
             // Send PUT request to change password endpoint
-            await axiosInstance.post('/api/auth/update-password', {
+            await axiosInstance.post(AuthRoutes.AUTH.PASSWORD, {
                 old_password: data.old_password,
                 new_password: data.new_password,
                 new_password_confirmation: data.new_password_confirmation,
             });
             setServerMessage('Password changed successfully.');
-            reset(); // Clear form fields
+            reset();
         } catch (err: any) {
             // Handle validation errors from server
             const respErrors = err.response?.data?.errors;
@@ -66,11 +67,7 @@ export default function ChangePasswordForm({className}: { className?: string }) 
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={cn('max-w-2xl mx-auto space-y-6' , className)}>
-            {/* Old password field */}
-            <h3 className={'text-2xl lg:text-4xl font-bold my-5'}>
-                Change Password
-            </h3>
+        <form onSubmit={handleSubmit(onSubmit)} className={cn('max-w-2xl mx-auto space-y-6 mt-10', className)}>
 
             <TextInput
                 label="Current Password"
@@ -122,9 +119,8 @@ export default function ChangePasswordForm({className}: { className?: string }) 
             <Button
                 type="submit"
                 variant="default"
-                size="lg"
                 disabled={loading}
-                className="w-full flex items-center justify-center space-x-2"
+                className="mx-auto flex items-center justify-center space-x-2"
             >
                 {loading && <Loader2 className="animate-spin"/>}
                 <span>{loading ? 'Changing...' : 'Change Password'}</span>

@@ -2,8 +2,10 @@
 
 import {useForm} from 'react-hook-form';
 import {useAuth} from '@/hooks/useAuth';
-import {Buttons} from '@/components/ui/buttons';
 import {RegisterType} from '@/types/auth';
+import {Button} from "@/components/ui/button";
+import {Loader2} from "lucide-react";
+import TextInput from "@/components/ui/text-input";
 
 export default function RegisterForm() {
     const {
@@ -17,6 +19,8 @@ export default function RegisterForm() {
     const {
         register: authRegister,
         errors: serverErrors = {},
+        status,
+        postLoading: loading
     } = useAuth({middleware: 'guest', redirectIfAuthenticated: '/dashboard'});
 
     const passwordValue = watch('password');
@@ -32,82 +36,56 @@ export default function RegisterForm() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-sm mx-auto space-y-4">
             {/* نام */}
-            <div>
-                <label htmlFor="name" className="block text-sm">نام</label>
-                <input
-                    id="name"
-                    {...rhfRegister('name', {required: 'نام الزامی است'})}
-                    className="mt-1 block w-full border p-2 rounded"
-                />
-                {(formErrors.name?.message || serverErrors.name) && (
-                    <p className="text-red-500 text-sm">
-                        {formErrors.name?.message || serverErrors.name}
-                    </p>
-                )}
-            </div>
+            <TextInput
+                type={'text'}
+                label={'Name'}
+                error={(formErrors.name?.message || serverErrors.name) && (formErrors.name?.message || serverErrors.name)}
+                register={{...rhfRegister('name', {required: 'name is required'})}}
+            />
 
             {/* ایمیل */}
-            <div>
-                <label htmlFor="email" className="block text-sm">ایمیل</label>
-                <input
-                    id="email"
-                    {...rhfRegister('email', {
-                        required: 'ایمیل الزامی است',
+            <TextInput
+                type={'email'}
+                label={'Email'}
+                error={(formErrors.email?.message || serverErrors.email) && (formErrors.email?.message || serverErrors.email)}
+                register={{
+                    ...rhfRegister('email', {
+                        required: 'email required!',
                         pattern: {
                             value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                            message: 'ایمیل نامعتبر است',
+                            message: 'email is not valid',
                         },
-                    })}
-                    className="mt-1 block w-full border p-2 rounded"
-                />
-                {(formErrors.email?.message || serverErrors.email) && (
-                    <p className="text-red-500 text-sm">
-                        {formErrors.email?.message || serverErrors.email}
-                    </p>
-                )}
-            </div>
+                    })
+                }}/>
 
             {/* رمز عبور */}
-            <div>
-                <label htmlFor="password" className="block text-sm">رمز عبور</label>
-                <input
-                    id="password"
-                    type="password"
-                    {...rhfRegister('password', {
-                        required: 'رمز عبور الزامی است',
-                        minLength: {value: 6, message: 'حداقل 6 کاراکتر'},
-                    })}
-                    className="mt-1 block w-full border p-2 rounded"
-                />
-                {(formErrors.password?.message || serverErrors.password) && (
-                    <p className="text-red-500 text-sm">
-                        {formErrors.password?.message || serverErrors.password}
-                    </p>
-                )}
-            </div>
+            <TextInput
+                type={'password'}
+                label={'Password'}
+                error={(formErrors.password?.message || serverErrors.password) && (formErrors.password?.message || serverErrors.password)}
+                register={{
+                    ...rhfRegister('password', {
+                        required: 'password required!',
+                        minLength: {value: 8, message: 'password must be at least 8 characters'},
+                    })
+                }}/>
 
             {/* تکرار رمز عبور */}
-            <div>
-                <label htmlFor="password_confirmation" className="block text-sm">تکرار رمز عبور</label>
-                <input
-                    id="password_confirmation"
-                    type="password"
-                    {...rhfRegister('password_confirmation', {
-                        required: 'تکرار رمز عبور الزامی است',
-                        validate: (value) => value === passwordValue || 'رمزها مطابقت ندارند',
-                    })}
-                    className="mt-1 block w-full border p-2 rounded"
-                />
-                {formErrors.password_confirmation && (
-                    <p className="text-red-500 text-sm">
-                        {formErrors.password_confirmation.message}
-                    </p>
-                )}
-            </div>
+            <TextInput
+                type={'password'}
+                label={'Confirm Password'}
+                error={(formErrors.password_confirmation) && (formErrors.password_confirmation.message)}
+                register={{
+                    ...rhfRegister('password_confirmation', {
+                        required: 'Confirm password required!',
+                        validate: (value) => value === passwordValue || 'passwords do not match',
+                    })
+                }}/>
 
-            <Buttons variant="primary" type="submit">
-                ثبت نام
-            </Buttons>
+            <Button className={'w-full'} disabled={loading} type="submit">
+                {loading && <Loader2 className="animate-spin"/>}
+                {loading ? 'Please wait' : 'Sign Up'}
+            </Button>
         </form>
     );
 }

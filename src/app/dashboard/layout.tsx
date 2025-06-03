@@ -6,10 +6,14 @@ export const metadata: Metadata = {
     description: "non add",
 };
 
-export default function RootLayout({
+export default function DashboardLayout({
                                        children,
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return children;
+    return (
+        <main className={'dashboard-bg min-h-svh flex-center flex-col justify-start w-full h-full pt-20'}>
+            {children}
+        </main>
+    );
 }

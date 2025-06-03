@@ -1,8 +1,6 @@
-@import 'modern-normalize';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 :root {
   --font-roboto: 'Roboto', sans-serif;
@@ -22,7 +20,6 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 14px;
   }
 
   html {
@@ -77,4 +74,17 @@ main {
   background-color: #F5F5F5;
 }
 
-
+.text-box-shadow{
+  box-shadow: 0px 0px 1.5px 0px rgba(0, 0, 0, 0.25); ;
+}
+.chat-box-shadow{
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25) inset;;
+}
+.navigation-shadow{
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+}
+.dashboard-bg{
+  background-image: url("/assets/dashborad-bg.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}

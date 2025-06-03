@@ -5,6 +5,10 @@ export interface UserType {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    phone?: string;
+    role: 'user' | 'admin'
+    avatar?: string
+    image?: FileList
 }
 
 export interface LoginType {
@@ -26,7 +30,13 @@ export interface AuthProps {
     redirectIfAuthenticated?: string;
 }
 
-export interface ResponseTypeAuth {
+export interface LoginResponse {
     user: UserType,
-    access_token: string
+    token: string
+}
+
+export interface ResponseTypeAuth {
+    success: boolean;
+    message: string;
+    data: LoginResponse;
 }

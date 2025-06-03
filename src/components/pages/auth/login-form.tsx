@@ -1,9 +1,11 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { useAuth } from '@/hooks/useAuth';
+import {useForm} from 'react-hook-form';
+import {useAuth} from '@/hooks/useAuth';
 import {LoginType} from "@/types/auth";
-import {Buttons} from "@/components/ui/buttons";
+import {Button} from "@/components/ui/button";
+import TextInput from "@/components/ui/text-input";
+import {Loader2} from "lucide-react";
 
 
 export default function LoginForm() {
@@ -11,7 +13,7 @@ export default function LoginForm() {
     const {
         register: rhfRegister,
         handleSubmit,
-        formState: { errors: formErrors },
+        formState: {errors: formErrors},
         setError,
     } = useForm<LoginType>();
 
@@ -19,65 +21,50 @@ export default function LoginForm() {
     const {
         login: authLogin,
         errors: serverErrors = {},  // default to {}
-        loading
-    } = useAuth({ middleware: 'guest', redirectIfAuthenticated: '/dashboard' });
+        postLoading
+    } = useAuth({middleware: 'guest', redirectIfAuthenticated: '/dashboard'});
 
     const onSubmit = async (data: LoginType) => {
         await authLogin(data);
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="max-w-sm mx-auto space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto space-y-4">
             {/* Email */}
-            <div>
-                <label htmlFor="email" className="block text-sm">ایمیل</label>
-                <input
-                    id="email"
-                    {...rhfRegister('email', {
-                        required: 'ایمیل الزامی است',
+
+            <TextInput
+                type={'email'}
+                label={'Email'}
+                error={(formErrors.email?.message || serverErrors.email) && (formErrors.email?.message || serverErrors.email)}
+                register={{
+                    ...rhfRegister('email', {
+                        required: 'email required!',
                         pattern: {
                             value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                            message: 'ایمیل نامعتبر است',
+                            message: 'email is not valid',
                         },
-                    })}
-                    className="mt-1 block w-full border p-2 rounded"
-                />
-                {/* Client-side or server-side email error */}
-                {(formErrors.email?.message || serverErrors.email) && (
-                    <p className="text-red-500 text-sm">
-                        {formErrors.email?.message || serverErrors.email}
-                    </p>
-                )}
-            </div>
+                    })
+                }}/>
 
-            {/* Password */}
-            <div>
-                <label htmlFor="password" className="block text-sm">رمز عبور</label>
-                <input
-                    id="password"
-                    type="password"
-                    {...rhfRegister('password', {
-                        required: 'رمز عبور الزامی است',
-                        minLength: { value: 6, message: 'حداقل 6 کاراکتر' },
-                    })}
-                    className="mt-1 block w-full border p-2 rounded"
-                />
-                {/* Client-side or server-side password error */}
-                {(formErrors.password?.message || serverErrors.password) && (
-                    <p className="text-red-500 text-sm">
-                        {formErrors.password?.message || serverErrors.password}
-                    </p>
-                )}
-            </div>
-
+            <TextInput
+                type={'password'}
+                label={'Password'}
+                error={(formErrors.password?.message || serverErrors.password) && (formErrors.password?.message || serverErrors.password)}
+                register={{
+                    ...rhfRegister('password', {
+                        required: 'password required!',
+                        minLength: {value: 8, message: 'password must be at least 8 characters'},
+                    })
+                }}/>
             {/* Generic credentials error (e.g. wrong email/password) */}
             {serverErrors.credentials && (
                 <p className="text-red-500 text-sm">{serverErrors.credentials}</p>
             )}
 
-            <Buttons type={'submit'} variant={'primary'} disabled={loading} className={''}>
-                {loading ? 'در حال ورود': 'ورود'}
-            </Buttons>
+            <Button type={'submit'} variant={'default'} disabled={postLoading} className={'w-full text-16 px-8'}>
+                Sign In
+                {postLoading && <Loader2 className={'animate-spin'}/>}
+            </Button>
         </form>
     );
 }

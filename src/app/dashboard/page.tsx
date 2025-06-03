@@ -1,9 +1,12 @@
-import DashboardPage from "@/components/pages/auth/dashboard";
+import {getUserChats} from "@/api/get-user-chats";
+import {cookies} from "next/headers";
+import HotelSingleMapClient from "@/components/pages/dashboard/UserDashboardShell";
 
-export default function Page() {
-  return(
-      <div className={''}>
-        <DashboardPage/>
-      </div>
-  )
+export default async function DashboardPage() {
+    const cookie = await cookies()
+    if (!cookie.has('token')) {
+        return null
+    }
+    const chats = await getUserChats()
+    return <HotelSingleMapClient chats={chats}/>
 }

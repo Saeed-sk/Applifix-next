@@ -1,49 +1,57 @@
 'use client';
 
-import {useCallback, useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
-import useSWR from "swr";
-import Cookies from "js-cookie";
-import axios from "@/lib/axios";
+import {useCallback, useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import useSWR from 'swr';
+import Cookies from 'js-cookie';
+import axios from '@/lib/axios';
 import {
     AuthProps,
     LoginType,
     RegisterType,
     ResponseTypeAuth,
     UserType,
-} from "@/types/auth";
+} from '@/types/auth';
+import {AuthRoutes} from '@/api/auth-routes';
+import {ApiResponse} from "@/types/index.js";
 
-/**
- * Custom hook for managing user authentication and route protection.
- *
- * @param {AuthProps} options - Configuration options for middleware and redirection.
- * @param {'guest' | 'auth'} options.middleware
- *   - 'guest': Redirects authenticated users away from guest-only pages (e.g., login/register).
- *   - 'auth': Protects auth-only pages and redirects guests to the login page.
- * @param {string} [options.redirectIfAuthenticated]
- *   - The path to redirect to when a 'guest' middleware detects an already authenticated user.
- *   - Commonly set to '/dashboard' or a similar post-login landing page.
- */
 export const useAuth = ({middleware, redirectIfAuthenticated}: AuthProps = {}) => {
     const router = useRouter();
+
+    // 1) State
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const [status, setStatus] = useState<'loading' | 'guest' | 'authenticated' | 'failed'>('loading');
+    const [status, setStatus] = useState<'loading' | 'guest' | 'authenticated' | 'failed'>(
+        Cookies.get('token') ? 'loading' : 'guest'
+    );
     const [user, setUser] = useState<UserType | null>(null);
+    const [postLoading, setPostLoading] = useState(false);
+    const [token, setToken] = useState<string | null>(Cookies.get('token') ?? null);
 
-    // Set default Authorization header from cookie on mount
+    // 2) Sync cookie → token + header + guest-status if no token
     useEffect(() => {
-        const token = Cookies.get('token');
-        if (token) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const accessToken = Cookies.get('token') ?? null;
+        setToken(accessToken);
+
+        if (accessToken) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+            setStatus('authenticated')
+        } else {
+            delete axios.defaults.headers.common['Authorization'];
+            setStatus('guest');
         }
-    }, []);
+    }, [token]);
 
-    // Fetcher using Authorization header
-    const fetcher = (url: string) => axios.get(url).then(res => res.data);
-    const {data, error, mutate} = useSWR<UserType>('/api/auth/me', fetcher);
+    // 3) SWR fetch user info
+    const fetcher = (url: string) => axios.get<ApiResponse<UserType>>(url).then(res => res.data.data);
+    const {data, error, mutate} = useSWR<UserType>(
+        token ? AuthRoutes.AUTH.ME : null,
+        fetcher,
+    );
 
-    // Sync auth state based on SWR response
+    // 4) Handle SWR responses
     useEffect(() => {
+        if (!token) return;
+
         if (data) {
             setStatus('authenticated');
             setErrors({});
@@ -51,88 +59,95 @@ export const useAuth = ({middleware, redirectIfAuthenticated}: AuthProps = {}) =
         } else if (error) {
             setStatus('guest');
             setUser(null);
+            Cookies.remove('token');
         } else {
             setStatus('loading');
         }
-    }, [data, error]);
+    }, [data, error, token]);
 
-    // Redirect users based on auth status and middleware
+    // 5) Redirect rules
     useEffect(() => {
-        // if (status === 'authenticated' && middleware === 'guest' && redirectIfAuthenticated) {
-        //     router.push(redirectIfAuthenticated);
-        // } else if (status === 'guest' && middleware === 'auth') {
-        //     router.push('/login');
-        // }
+        if (status === 'loading') return;
+
+        if (status === 'authenticated' && middleware === 'guest' && redirectIfAuthenticated) {
+            router.push(redirectIfAuthenticated);
+        } else if (status === 'guest' && middleware === 'auth') {
+            router.push('/login');
+        }
     }, [status, middleware, redirectIfAuthenticated, router]);
 
-    // Helper to store token in cookies and set header
-    const storeToken = (token: string) => {
-        Cookies.set('token', token, {expires: 7});
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // 6) Token helper
+    const storeToken = (accessToken: string) => {
+        Cookies.set('token', accessToken, {expires: 7});
+        setToken(accessToken);
     };
 
-    // Register a new user
+    // 7) Register
     const register = async (props: RegisterType) => {
         try {
-            setStatus('loading');
-            const response = await axios.post<ResponseTypeAuth>('/api/auth/register', props);
-            // Store received access token
-            storeToken(response.data.access_token);
-            await mutate();
+            setPostLoading(true);
+            setErrors({});
+            const response = await axios.post<ResponseTypeAuth>(
+                AuthRoutes.AUTH.REGISTER,
+                props
+            );
+            storeToken(response.data.data.token);
+            mutate();
             router.push('/dashboard');
         } catch (e: any) {
             if (e.response?.status === 422) {
-                setErrors(e.response.data || {});
-            } else {
-                throw e;
+                setErrors(e.response.data.errors || {});
             }
             setStatus('failed');
+        } finally {
+            setPostLoading(false);
         }
     };
 
-    // Log in an existing user
+    // 8) Login
     const login = async (props: LoginType) => {
         try {
-            setStatus('loading');
-            const response = await axios.post<ResponseTypeAuth>('/api/auth/login', props);
-            // Store received access token
-            storeToken(response.data.access_token);
-            await mutate();
+            setPostLoading(true);
+            setErrors({});
+            const response = await axios.post<ResponseTypeAuth>(
+                AuthRoutes.AUTH.LOGIN,
+                props
+            );
+            storeToken(response.data.data.token);
+            mutate();
             router.push('/dashboard');
         } catch (e: any) {
             if (e.response?.status === 422) {
-                setErrors(e.response.data || {});
-            } else if (e.response.status === 401) {
-                setErrors({
-                    email: 'The provided credentials are incorrect.',
-                });
-            } else {
-                throw e;
+                setErrors(e.response.data.errors || {});
+            } else if (e.response?.status === 401) {
+                setErrors({email: 'The provided credentials are incorrect.'});
             }
             setStatus('failed');
+        } finally {
+            setPostLoading(false);
         }
     };
 
-    // Log out the current user
+    // 9) Logout
     const logout = useCallback(async () => {
         try {
-            await axios.post('/api/auth/logout');
-        } catch (e) {
-            console.error(e);
+            await axios.post(AuthRoutes.AUTH.LOGOUT);
+        } catch {
+            // ignore
         } finally {
-            // Remove token and header
             Cookies.remove('token');
-            delete axios.defaults.headers.common['Authorization'];
+            setToken(null);
             setStatus('guest');
-            await mutate();
+            mutate();
             router.push('/login');
         }
     }, [mutate, router]);
 
     return {
-        user: data ?? null,
+        user,
         status,
         loading: status === 'loading',
+        postLoading,
         errors,
         register,
         login,

@@ -2,8 +2,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL, // e.g. http://localhost:8000
-    headers: { 'Content-Type': 'application/json' },
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    headers: {'Content-Type': 'application/json'},
     withCredentials: false,
 });
 

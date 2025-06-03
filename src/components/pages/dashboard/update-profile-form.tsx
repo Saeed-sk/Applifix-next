@@ -2,23 +2,19 @@
 
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import axios from 'axios';
 import {Button} from '@/components/ui/button';
 import TextInput from '@/components/ui/text-input';
 import {Loader2} from 'lucide-react';
 import {UserType} from "@/types/auth";
 import {cn} from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
+import {AuthRoutes} from "@/api/auth-routes";
 
 export type ProfileType = {
     name: string;
     email: string;
-    first_name: string;
-    last_name: string;
     phone: string;
-    address: string;
-    city: string;
-    state: string;
+    image: FileList
 };
 
 type UpdateProfileFormProps = {
@@ -53,24 +49,37 @@ export default function UpdateProfileForm({initialData, className}: UpdateProfil
         setLoading(true);
         setServerMessage(null);
 
+        // ساختن FormData
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('email', data.email);
+        formData.append('phone', data.phone);
+
+        // avatar ممکن است FileList باشد
+        if (data.image && data.image.length > 0) {
+            formData.append('image', data.image[0]);
+        }
+
         try {
-            // Send data to your API endpoint
-            await axiosInstance.post('/api/auth/update-profile', data);
+            await axiosInstance.post(AuthRoutes.AUTH.UPDATE, formData, {
+                headers: {'Content-Type': 'multipart/form-data'}
+            });
             setServerMessage('Profile updated successfully.');
         } catch (err: any) {
-            // If validation errors from server, map them into form errors
-            const respErrors = err.response?.data;
-            if (respErrors) {
-                Object.entries(respErrors).forEach(([field, messages]) => {
+            const resp = err.response?.data;
+            console.log(err)
+            if (resp?.errors) {
+
+                // خطاها زیر resp.errors هستند
+                Object.entries(resp.errors).forEach(([field, messages]) => {
                     setError(field as keyof ProfileType, {
                         type: 'server',
                         message: Array.isArray(messages)
-                            ? messages.join(' ')
+                            ? (messages as string[]).join(' ')
                             : String(messages)
                     });
                 });
             } else {
-                // Fallback for unexpected errors
                 setServerMessage('An unexpected error occurred.');
             }
         } finally {
@@ -79,14 +88,20 @@ export default function UpdateProfileForm({initialData, className}: UpdateProfil
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={cn('w-full mx-auto space-y-6 max-w-2xl', className)}>
+        <form onSubmit={handleSubmit(onSubmit)}
+              className={cn('w-full mx-auto space-y-6 max-w-2xl bg-white p-5 rounded-20 shadow-lg mt-10', className)}>
             {/* Full name field */}
-
-            <h3 className={'text-2xl lg:text-4xl font-bold my-5'}>
-                Personal Information
-            </h3>
             <TextInput
-                label="Full Name"
+                label="Avatar"
+                type="file"
+                error={errors.image?.message}
+                register={{
+                    ...register('image', {required: 'Avatar is required.'})
+                }}
+            />
+
+            <TextInput
+                label="User Name"
                 type="text"
                 error={errors.name?.message}
                 register={{
@@ -110,26 +125,6 @@ export default function UpdateProfileForm({initialData, className}: UpdateProfil
                 }}
             />
 
-            {/* First and Last name grouped */}
-            <div className="grid grid-cols-2 gap-4">
-                <TextInput
-                    label="First Name"
-                    type="text"
-                    error={errors.first_name?.message}
-                    register={{
-                        ...register('first_name', {required: 'First name is required.'})
-                    }}
-                />
-                <TextInput
-                    label="Last Name"
-                    type="text"
-                    error={errors.last_name?.message}
-                    register={{
-                        ...register('last_name', {required: 'Last name is required.'})
-                    }}
-                />
-            </div>
-
             {/* Phone number with numeric pattern */}
             <TextInput
                 label="Phone"
@@ -146,36 +141,6 @@ export default function UpdateProfileForm({initialData, className}: UpdateProfil
                 }}
             />
 
-            {/* Address field */}
-            <TextInput
-                label="Address"
-                type="text"
-                error={errors.address?.message}
-                register={{
-                    ...register('address', {required: 'Address is required.'})
-                }}
-            />
-
-            {/* City and State grouped */}
-            <div className="grid grid-cols-2 gap-4">
-                <TextInput
-                    label="City"
-                    type="text"
-                    error={errors.city?.message}
-                    register={{
-                        ...register('city', {required: 'City is required.'})
-                    }}
-                />
-                <TextInput
-                    label="State"
-                    type="text"
-                    error={errors.state?.message}
-                    register={{
-                        ...register('state', {required: 'State is required.'})
-                    }}
-                />
-            </div>
-
             {/* Server success or general error message */}
             {serverMessage && (
                 <p className={`text-sm ${serverMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
@@ -187,9 +152,8 @@ export default function UpdateProfileForm({initialData, className}: UpdateProfil
             <Button
                 type="submit"
                 variant="default"
-                size="lg"
                 disabled={loading}
-                className="w-full flex items-center justify-center space-x-2"
+                className="mx-auto flex items-center justify-center space-x-2"
             >
                 {loading && <Loader2 className="animate-spin"/>}
                 <span>{loading ? 'Updating...' : 'Update Profile'}</span>

@@ -1,29 +1,25 @@
 import React from "react";
 
-interface Props extends React.SVGProps<SVGSVGElement> {}
+interface Props extends React.SVGProps<SVGSVGElement> {
+}
 
-export const IconChat: React.FC<Props> = ({ className, ...props }) => {
+export const IconExit: React.FC<Props> = ({className, ...props}) => {
     return (
         <svg
             width="1em"
             height="1em"
-            viewBox="0 0 28 28"
+            viewBox="0 0 30 30"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className={className}
             {...props}
         >
             <path
-                stroke="#fff"
-                strokeWidth={2}
-                d="M1.2 14a12.8 12.8 0 0 1 25.6 0v8.144c0 1.357 0 2.032-.201 2.575a3.2 3.2 0 0 1-1.88 1.88c-.543.201-1.22.201-2.575.201H14A12.8 12.8 0 0 1 1.2 14Z"
-            />
-            <path
-                stroke="#fff"
+                stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.2 12.4h9.6M14 18.8h4.8"
+                strokeWidth={1.5}
+                d="M18.75 5.001H6.25v17.5a2.5 2.5 0 0 0 2.5 2.5h10m1.25-6.25 3.75-3.75m0 0L20 11.251m3.75 3.75h-12.5"
             />
         </svg>
     );

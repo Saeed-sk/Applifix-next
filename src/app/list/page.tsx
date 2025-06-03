@@ -1,10 +1,9 @@
-import {getTopics} from "@/api/get-topics";
+import {Title} from "@/components/shared/title";
 
-export default async function List() {
-    const topics = await getTopics();
-    return (
-        <div>
-            get topic
-        </div>
+export default function List() {
+    return(
+        <Title>
+            not ready yet
+        </Title>
     )
 }

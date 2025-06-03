@@ -1,190 +1,89 @@
 // components/Icons.tsx
 import React from "react";
 import {IoCloseSharp} from "react-icons/io5";
-import {AiOutlineCopyright} from "react-icons/ai";
-import {SiAparat} from "react-icons/si";
-import {BsInstagram} from "react-icons/bs";
-import {ImWhatsapp} from "react-icons/im";
-import {BiLogoTelegram} from "react-icons/bi";
-import {LiaFacebookF} from "react-icons/lia";
-import {IoLogoTwitter} from "react-icons/io5";
-import {FaAngleRight, FaLinkedinIn} from "react-icons/fa6";
-import {FaYoutube} from "react-icons/fa";
-import {CgProfile} from "react-icons/cg";
-import {IoDocumentTextOutline} from "react-icons/io5";
-import {SlMenu} from "react-icons/sl";
-import {IoSearchOutline} from "react-icons/io5";
-import {FaChevronDown} from "react-icons/fa6";
-import {IoIosCloseCircleOutline} from "react-icons/io";
-import {CiCircleChevRight} from "react-icons/ci";
-import {CiCircleChevLeft} from "react-icons/ci";
-import {CiCalendar} from "react-icons/ci";
-import {IconBed} from "@/components/ui/icons/icon-bed";
-import {IconLogoDrak} from "@/components/ui/icons/icon-logo-drak";
-import {IconLogoLight} from "@/components/ui/icons/icon-logo-light";
-import {BgTicket} from "@/components/ui/icons/bg-ticket";
-import {IconGroupUser} from "@/components/ui/icons/icon-group-user";
-import {IconTour} from "@/components/ui/icons/icon-tour";
-import {CiCircleChevDown} from "react-icons/ci";
-import {CiCircleChevUp} from "react-icons/ci";
-import {SlShare} from "react-icons/sl";
-import {CiClock1} from "react-icons/ci";
-import {IoBookmark} from "react-icons/io5";
-import {IoBookmarkOutline} from "react-icons/io5";
-import {MdLocalPhone} from "react-icons/md";
-import {TbMailFilled} from "react-icons/tb";
-import {FaLocationDot} from "react-icons/fa6";
-import {GoHeartFill} from "react-icons/go";
-import {IoIosHeartEmpty} from "react-icons/io";
-import {IconTick} from "@/components/ui/icons/icon-tick";
-import {IconPlane} from "@/components/ui/icons/icon-plane";
-import {IconFlag} from "@/components/ui/icons/icon-flag";
-import {IconSecurity} from "@/components/ui/icons/icon-security";
-import { FaAngleLeft } from "react-icons/fa6";
-import {IconContactLocation} from "@/components/ui/icons/icon-contact-location";
-import {IconContactCall} from "@/components/ui/icons/icon-contact-call";
+import {LogoIconTextNone} from "@/components/ui/icons/logo-text-none";
+import {LogoIcon} from "@/components/ui/icons/logo-text";
+import {IconHome} from "@/components/ui/icons/icon-home";
+import {IconExit} from "@/components/ui/icons/icon-exit";
+import {IconList} from "@/components/ui/icons/icon-list";
+import {IconSetting} from "@/components/ui/icons/icon-setting";
+import {IconChat} from "@/components/ui/icons/icon-chat";
+import { IoNotifications } from "react-icons/io5";
+import {AiStars} from "@/components/ui/icons/icon-ai-stars";
+import {FaCalendar} from "react-icons/fa";
+import {ChatAIStars} from "@/components/ui/icons/icon-ai-chat-stars";
+import {ChatUser} from "@/components/ui/icons/icon-chat-user";
+import {IconChatTop} from "@/components/ui/icons/icon-chat-top";
+import {IconSend} from "@/components/ui/icons/icon-send";
+import { IoLogIn } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
+import {FiHome} from "react-icons/fi";
+import {RiChatAiLine} from "react-icons/ri";
+import {CiViewList} from "react-icons/ci";
 
 
 type IconComponent = React.FC<{ className?: string }>;
 
 interface Props {
     name: string;
-    classes?: string;
+    className?: string;
 }
 
-export const IconSelect: React.FC<Props> = ({name, classes = ""}) => {
+export const IconSelect: React.FC<Props> = ({name, className = ""}) => {
     let DynamicComponent: IconComponent;
 
     switch (name) {
-        case "close-outline":
-            DynamicComponent = IoIosCloseCircleOutline;
-            break;
         case "close":
             DynamicComponent = IoCloseSharp;
             break;
-        case "flag":
-            DynamicComponent = IconFlag;
+        case "logo":
+            DynamicComponent = LogoIconTextNone;
             break;
-        case "security":
-            DynamicComponent = IconSecurity;
+        case "login":
+            DynamicComponent = IoLogIn;
             break;
-        case 'copyright':
-            DynamicComponent = AiOutlineCopyright;
+        case "chat-ai":
+            DynamicComponent = ChatAIStars;
             break;
-        case 'heart-fill':
-            DynamicComponent = GoHeartFill;
+        case "AC":
+            DynamicComponent = FaCalendar;
             break;
-        case 'check-tick':
-            DynamicComponent = IconTick;
+        case "chat-top":
+            DynamicComponent = IconChatTop;
             break;
-        case 'heart-outline':
-            DynamicComponent = IoIosHeartEmpty;
+        case "send":
+            DynamicComponent = IconSend;
             break;
-        case 'contact-location':
-            DynamicComponent = IconContactLocation;
+        case "avatar":
+            DynamicComponent = ChatUser;
             break;
-        case 'contact-call':
-            DynamicComponent = IconContactCall;
+        case "notification":
+            DynamicComponent = IoNotifications;
             break;
-        case 'aparat':
-            DynamicComponent = SiAparat;
+        case "ai":
+            DynamicComponent = AiStars;
             break;
-        case 'instagram':
-            DynamicComponent = BsInstagram;
+        case "logo-text":
+            DynamicComponent = LogoIcon;
             break;
-        case 'whatsapp':
-            DynamicComponent = ImWhatsapp;
+        case "home":
+            DynamicComponent = FiHome ;
             break;
-        case 'telegram':
-            DynamicComponent = BiLogoTelegram;
+        case "chat":
+            DynamicComponent = RiChatAiLine;
             break;
-        case 'facebook':
-            DynamicComponent = LiaFacebookF;
+        case "exit":
+            DynamicComponent = IconExit;
             break;
-        case 'twitter':
-            DynamicComponent = IoLogoTwitter;
+        case "list":
+            DynamicComponent = CiViewList;
             break;
-        case 'linkedin':
-            DynamicComponent = FaLinkedinIn;
-            break;
-        case 'youtube':
-            DynamicComponent = FaYoutube;
-            break;
-        case 'profile':
-            DynamicComponent = CgProfile;
-            break;
-        case 'document':
-            DynamicComponent = IoDocumentTextOutline;
-            break;
-        case 'menu':
-            DynamicComponent = SlMenu;
-            break;
-        case 'search':
-            DynamicComponent = IoSearchOutline;
-            break;
-        case 'down':
-            DynamicComponent = FaChevronDown;
-            break;
-        case 'slider-right':
-            DynamicComponent = FaAngleRight ;
-            break;
-        case 'slider-left':
-            DynamicComponent = FaAngleLeft;
-            break;
-        case 'slider-down':
-            DynamicComponent = CiCircleChevDown;
-            break;
-        case 'slider-up':
-            DynamicComponent = CiCircleChevUp;
-            break;
-        case 'clock':
-            DynamicComponent = CiClock1;
-            break;
-        case 'bookmark':
-            DynamicComponent = IoBookmark;
-            break;
-        case 'bookmarkOutLine':
-            DynamicComponent = IoBookmarkOutline;
-            break;
-        case 'share':
-            DynamicComponent = SlShare;
-            break;
-        case 'hotel':
-            DynamicComponent = IconBed;
-            break;
-        case 'logo-dark':
-            DynamicComponent = IconLogoDrak;
-            break;
-        case 'logo-light':
-            DynamicComponent = IconLogoLight;
-            break;
-        case 'ticket':
-            DynamicComponent = BgTicket;
-            break;
-        case 'users':
-            DynamicComponent = IconGroupUser;
-            break;
-        case 'tour':
-            DynamicComponent = IconTour;
-            break;
-        case 'plane':
-            DynamicComponent = IconPlane;
-            break;
-        case 'calendar':
-            DynamicComponent = CiCalendar;
-            break;
-        case 'phone':
-            DynamicComponent = MdLocalPhone;
-            break;
-        case 'mail':
-            DynamicComponent = TbMailFilled;
-            break;
-        case 'location':
-            DynamicComponent = FaLocationDot;
+        case "setting":
+            DynamicComponent = IoSettingsOutline;
             break;
         default:
             DynamicComponent = IoCloseSharp;
     }
 
-    return <DynamicComponent className={classes}/>;
+    return <DynamicComponent className={className}/>;
 };

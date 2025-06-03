@@ -13,8 +13,8 @@ type Props = {
 };
 
 
-export function MainDashboard({user, className, chats}: Props) {
-    console.log(chats.data[0].history[0])
+export function UserChats({user, className, chats}: Props) {
+    
     return (
         <div
             className={cn('w-full h-full p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3', className)}>
