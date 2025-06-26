@@ -8,26 +8,33 @@ import {
 } from "@/components/ui/tabs";
 import UpdateProfileForm from "@/components/pages/dashboard/update-profile-form";
 import ChangePasswordForm from "@/components/pages/dashboard/change-password-form";
-import {useAuth} from "@/hooks/useAuth";
 import {UserChats} from "@/components/pages/dashboard/user-chats";
 import {ChatType, PaginatedResponse} from "@/types/index.js";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Topics} from "@/components/pages/dashboard/topics";
+import {useAuth} from "@/store/AuthProvider";
+import {Loader2} from "lucide-react";
 
 interface Props {
     chats: PaginatedResponse<ChatType>
 }
 
 export function UserDashboard({chats}: Props) {
-    const {user, logout, loading, postLoading} = useAuth({middleware: 'auth'});
+    const {user, loading} = useAuth()
+    const [userIn, setUserIn] = useState(false)
 
-    if (loading) {
-        return <div>Loading...</div>;
+    useEffect(() => {
+        if (user && user.name) {
+            setUserIn(true)
+        } else {
+            setUserIn(false)
+        }
+    }, [loading]);
+
+    if (!userIn || !user) {
+        return <Loader2 className="w-6 h-6 mx-auto animate-spin text-white "/>;
     }
 
-    if (!user) {
-        return null;
-    }
     return (
         <section className="max-w-1440 w-full bg-main-dark lg:min-h-[671px] rounded-20 overflow-hidden">
             <Tabs defaultValue="account" className="w-full">
@@ -35,7 +42,7 @@ export function UserDashboard({chats}: Props) {
                     <TabsTrigger value="account">Last Repairs</TabsTrigger>
                     <TabsTrigger value="profile">Profile</TabsTrigger>
                     <TabsTrigger value="password">Password</TabsTrigger>
-                    {user.role === 'admin' && <TabsTrigger value="topics">Topics</TabsTrigger>}
+                    {user?.role === 'admin' && <TabsTrigger value="topics">Topics</TabsTrigger>}
                 </TabsList>
                 <TabsContent className="w-full h-full" value="account">
                     <UserChats chats={chats} className="" user={user}/>

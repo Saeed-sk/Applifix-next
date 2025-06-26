@@ -1,21 +1,29 @@
 'use client'
 import {Sidebar, Menu, MenuItem} from 'react-pro-sidebar';
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {IconSelect} from "@/components/ui/icon-select";
 import {cn} from "@/lib/utils";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
-import {useAuth} from "@/hooks/useAuth";
-import {UserType} from "@/types/auth";
+import {useAuth} from "@/store/AuthProvider";
 
 type Props = {
     className?: string
-    user?: UserType | null
 };
 
 export function NavbarLg(props: Props) {
     const [open, setOpen] = useState(false)
-    const {logout} = useAuth()
+    const {logout, user, loading, authenticated} = useAuth()
+    const [userIn, setUserIn] = useState(false)
+
+    useEffect(() => {
+        if (user?.name) {
+            setUserIn(true)
+        } else {
+            setUserIn(false)
+        }
+    }, [loading, user]);
+
     return (
         <Sidebar collapsed={!open} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}
                  className={cn('h-full absolute top-0 left-0', props.className)}>
@@ -31,7 +39,7 @@ export function NavbarLg(props: Props) {
 
 
                 {
-                    props.user ? (
+                    userIn ? (
                         <Fragment>
                             <NavLink link={'/dashboard'} icon={'setting'} text={'Dashboard'}/>
                             <NavLink link={'/list'} icon={'list'} text={'List'}/>

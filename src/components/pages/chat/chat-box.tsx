@@ -6,8 +6,6 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import {IconSelect} from "@/components/ui/icon-select";
 import {useRouter, useSearchParams} from "next/navigation";
 import {ChatMessage} from "@/types/index.js";
-import {AxiosError} from "axios";
-import {any} from "zod";
 import {LimitModal} from "@/components/pages/chat/limit-modal";
 
 

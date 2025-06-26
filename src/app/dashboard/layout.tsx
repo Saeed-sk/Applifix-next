@@ -2,8 +2,11 @@ import type {Metadata} from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-    title: "simple template",
-    description: "non add",
+    title: {
+        default: "Applifix - Dashboard",
+        template: "%s | Chat",
+    },
+    description: "Dashboard Chat of Applifix",
 };
 
 export default function DashboardLayout({

@@ -4,6 +4,15 @@ import {getUserSingleChat} from "@/api/get-user-single-chat";
 import {ChatMessage} from "@/types/index.js";
 import {cookies} from "next/headers";
 import {postChatWithTopic} from "@/api/post-chat-with-topic";
+import type {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: {
+        default: "Applifix - Chat with AI",
+        template: "%s | Chat",
+    },
+    description: "Chat with AI in Applifix",
+};
 
 type PropsType = {
     searchParams: Promise<

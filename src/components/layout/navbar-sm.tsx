@@ -4,8 +4,8 @@ import {IconSelect} from "@/components/ui/icon-select";
 import {cn} from "@/lib/utils";
 import {usePathname} from "next/navigation";
 import {AnimatePresence, motion} from "framer-motion";
-import {useAuth} from "@/hooks/useAuth";
-import {Fragment} from "react";
+import {useAuth} from "@/store/AuthProvider";
+import {Fragment, useEffect, useState} from "react";
 import {UserType} from "@/types/auth";
 
 type Props = {
@@ -14,14 +14,23 @@ type Props = {
 };
 
 export function NavbarSm(props: Props) {
-    const {logout} = useAuth()
+    const {logout, user, loading} = useAuth()
+    const [userIn, setUserIn] = useState(false)
+
+    useEffect(() => {
+        if (user?.name){
+            setUserIn(true)
+        }else {
+            setUserIn(false)
+        }
+    }, [loading]);
     return (
         <div
             className={cn('flex-center gap-[50px] bg-dark-100 mx-auto w-[95%] p-2 rounded-full mb-2 h-[70px]', props.className)}>
             <NavLink link={'/'} icon={'home'} text={'Home'}/>
             <NavLink link={'/chat'} icon={'chat'} text={'Chat'}/>
 
-            {props.user ? (
+            {userIn ? (
                 <Fragment>
                     <NavLink link={'/list'} icon={'list'} text={'List'}/>
                     <NavLink link={'/dashboard'} icon={'setting'} text={'Dashboard'}/>

@@ -4,6 +4,22 @@ import {AspectRatio} from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import {Fragment} from "react";
 import {Title} from "@/components/shared/title";
+export const metadata = {
+    title: 'Applifix login',
+};
+
+export function generateViewport() {
+    return {
+        viewport: {
+            width: 'device-width',
+            initialScale: 1,
+        },
+        themeColor: [
+            { media: '(prefers-color-scheme: light)', color: '#fff' },
+            { media: '(prefers-color-scheme: dark)', color: '#fff' },
+        ],
+    };
+}
 
 export default function LoginPage() {
     return (

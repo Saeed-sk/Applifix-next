@@ -9,6 +9,8 @@ import {UserType} from "@/types/auth";
 import {cn} from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
 import {AuthRoutes} from "@/api/auth-routes";
+import ImageInput from "@/components/ui/Image-input";
+import {nullable} from "zod";
 
 export type ProfileType = {
     name: string;
@@ -59,7 +61,7 @@ export default function UpdateProfileForm({initialData, className}: UpdateProfil
         if (data.image && data.image.length > 0) {
             formData.append('image', data.image[0]);
         }
-
+        console.log(data.image)
         try {
             await axiosInstance.post(AuthRoutes.AUTH.UPDATE, formData, {
                 headers: {'Content-Type': 'multipart/form-data'}
@@ -91,14 +93,22 @@ export default function UpdateProfileForm({initialData, className}: UpdateProfil
         <form onSubmit={handleSubmit(onSubmit)}
               className={cn('w-full mx-auto space-y-6 max-w-2xl bg-white p-5 rounded-20 shadow-lg mt-10', className)}>
             {/* Full name field */}
-            <TextInput
-                label="Avatar"
-                type="file"
+            <ImageInput
+                alt={'avatar'}
+                userImage={initialData.avatar}
                 error={errors.image?.message}
-                register={{
+                onChangeAction={{
                     ...register('image', {required: 'Avatar is required.'})
                 }}
             />
+            {/*<TextInput*/}
+            {/*    label="Avatar"*/}
+            {/*    type="file"*/}
+            {/*    error={errors.image?.message}*/}
+            {/*    register={{*/}
+            {/*        ...register('image', {required: 'Avatar is required.'})*/}
+            {/*    }}*/}
+            {/*/>*/}
 
             <TextInput
                 label="User Name"

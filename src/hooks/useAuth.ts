@@ -46,8 +46,13 @@ export const useAuth = ({middleware, redirectIfAuthenticated}: AuthProps = {}) =
     const {data, error, mutate} = useSWR<UserType>(
         token ? AuthRoutes.AUTH.ME : null,
         fetcher,
+        {
+            revalidateOnFocus: true,
+            revalidateOnReconnect: true,
+            refreshInterval: 30000 // Refresh every 30 seconds
+        }
     );
-
+    console.log(user)
     // 4) Handle SWR responses
     useEffect(() => {
         if (!token) return;
@@ -92,7 +97,10 @@ export const useAuth = ({middleware, redirectIfAuthenticated}: AuthProps = {}) =
                 props
             );
             storeToken(response.data.data.token);
-            mutate();
+            await mutate();
+            const userData = await fetcher(AuthRoutes.AUTH.ME);
+            setUser(userData);
+            setStatus('authenticated');
             router.push('/dashboard');
         } catch (e: any) {
             if (e.response?.status === 422) {
@@ -114,7 +122,10 @@ export const useAuth = ({middleware, redirectIfAuthenticated}: AuthProps = {}) =
                 props
             );
             storeToken(response.data.data.token);
-            mutate();
+            await mutate();
+            const userData = await fetcher(AuthRoutes.AUTH.ME);
+            setUser(userData);
+            setStatus('authenticated');
             router.push('/dashboard');
         } catch (e: any) {
             if (e.response?.status === 422) {
@@ -137,8 +148,9 @@ export const useAuth = ({middleware, redirectIfAuthenticated}: AuthProps = {}) =
         } finally {
             Cookies.remove('token');
             setToken(null);
+            setUser(null);
             setStatus('guest');
-            mutate();
+            await mutate(undefined, { revalidate: false });
             router.push('/login');
         }
     }, [mutate, router]);

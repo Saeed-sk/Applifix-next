@@ -1,26 +1,23 @@
 // middleware.ts
-import {NextResponse} from 'next/server';
-import type {NextRequest} from 'next/server';
+import {NextResponse, NextRequest} from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.has('token');
-    const {pathname, origin} = request.nextUrl;
+    const token = request.cookies.get('token')?.value;
+    const protectedRoutes = ['/dashboard', '/dashboard/chats', '/dashboard/chats/:id'];
+    if (protectedRoutes.includes(request.nextUrl.pathname) && !token) {
+        const loginUrl = new URL('/login', request.url);
+        return NextResponse.redirect(loginUrl);
+    }
 
-    const protectedRoutes = ['/dashboard'];
-    if (protectedRoutes.some(route => pathname.startsWith(route))) {
-        if (token) {
-            return NextResponse.next();
-        } else {
-            return NextResponse.redirect(`${origin}/login`);
-        }
+    if (request.nextUrl.pathname === '/login' && token) {
+        const dashboardUrl = new URL('/dashboard', request.url);
+        return NextResponse.redirect(dashboardUrl);
     }
 
     return NextResponse.next();
 }
 
+// تنظیم مسیرهایی که middleware باید اجرا شود
 export const config = {
-    matcher: [
-        '/dashboard',
-        '/dashboard/:path*',
-    ],
+    matcher: ['/dashboard/:path*'],
 };
