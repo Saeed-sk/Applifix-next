@@ -53,23 +53,19 @@ const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: 'http',
-                hostname: process.env.IMAGE_DIRECTORY!,
+                protocol: 'https',
+                hostname: 'applifix-back.liara.run',
             },
             {
                 protocol: 'http',
                 hostname: 'localhost',
             },
             {
-                protocol: 'https',
-                hostname: 'applifix-back.liara.run',
-            },
-            {
                 protocol: 'http',
                 hostname: '127.0.0.1',
                 port: '8000',
             }
-        ],
+        ]
     },
 };
 module.exports = withPWA(nextConfig)
