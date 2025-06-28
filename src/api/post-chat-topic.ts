@@ -3,7 +3,7 @@ import axios from "@/lib/axios";
 
 export async function postChatTopic(topic_id: number): Promise<ChatMessage[]> {
     try {
-        const response = await axios.post <ApiResponse<ChatMessage[]>>(`/api/new/chat`, {
+        const response = await axios.post <ApiResponse<ChatMessage[]>>(`/api/new/chat/topic`, {
             topic_id: topic_id,
         });
         return response.data.data;
