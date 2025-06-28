@@ -26,7 +26,6 @@ export function CardTopic({data, index = 0, ...props}: Props) {
                            src={env.NEXT_PUBLIC_IMAGE_DIRECTORY + data.src}
                            alt={data.title}
                            width={100}
-                           loading={'lazy'}
                            height={100}/>
                 </AspectRatio>
                 <div className={'flex-center flex-col items-start'}>
