@@ -23,7 +23,6 @@ export const ListMain = ({ chats: initialPaginate, className }: Props) => {
     const [loading, setLoading] = useState(false)
 
     const token = Cookies.get('token')
-
     // Fetch on page change or initial load
     useEffect(() => {
         const fetchChats = async () => {

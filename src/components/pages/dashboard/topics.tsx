@@ -84,7 +84,7 @@ export function Topics() {
                     <TableRow key={topic.id}>
                         <TableCell>{topic.id}</TableCell>
                         <TableCell className="font-medium">{textTrim(topic.description, 5)}...</TableCell>
-                        <TableCell><Image src={env.NEXT_PUBLIC_IMAGE_DIRECTORY + topic.src} width={100} height={50}
+                        <TableCell><Image unoptimized={true} src={env.NEXT_PUBLIC_IMAGE_DIRECTORY + topic.src} width={100} height={50}
                                           alt={''}/></TableCell>
                         <TableCell>
                             <TopicModalForm

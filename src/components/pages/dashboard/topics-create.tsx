@@ -79,7 +79,6 @@ export default function TopicModalForm({
     const onSubmit = async (data: TopicFormData) => {
         setSubmitting(true);
         const token = Cookies.get('token');
-        console.log(data)
         try {
             const payload = new FormData();
             payload.append('title', data.title ?? initial?.title);
