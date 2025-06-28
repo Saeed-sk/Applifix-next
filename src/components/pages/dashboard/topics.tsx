@@ -10,7 +10,7 @@ import {
 import {useEffect, useState} from "react";
 import {PaginatedResponse, TopicType} from "@/types/index.js";
 import {getTopics} from "@/api/get-topics";
-import {Edit2, Loader2, Trash2} from "lucide-react";
+import {Loader2, Trash2} from "lucide-react";
 import {textTrim} from "@/helpers/text-trim";
 import {Button} from "@/components/ui/button";
 import TopicModalForm from "@/components/pages/dashboard/topics-create";

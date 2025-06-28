@@ -5,7 +5,7 @@ import {env} from "@/env";
 const BASE_URL = env.NEXT_PUBLIC_API_URL;
 const api = axios.create({
     baseURL: BASE_URL,
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'application/json', "Accept": "application/json"},
     withCredentials: false,
 });
 
