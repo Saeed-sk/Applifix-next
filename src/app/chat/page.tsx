@@ -3,8 +3,8 @@ import {IconSelect} from "@/components/ui/icon-select";
 import {getUserSingleChat} from "@/api/get-user-single-chat";
 import {ChatMessage} from "@/types/index.js";
 import {cookies} from "next/headers";
-import {postChatWithTopic} from "@/api/post-chat-with-topic";
 import type {Metadata} from "next";
+import {postChatTopic} from "@/api/post-chat-topic";
 
 export const metadata: Metadata = {
     title: {
@@ -27,8 +27,7 @@ export default async function ChatMain({searchParams}: PropsType) {
     const params = await searchParams
     let chats: ChatMessage[] = [];
     if (cookie.has('token') && params?.chat_id) chats = await getUserSingleChat(parseInt(params.chat_id))
-    if (cookie.has('token') && params?.topic) chats = await postChatWithTopic(parseInt(params.topic))
-
+    if (params?.topic) chats = await postChatTopic(parseInt(params.topic))
     return (
         <main className={'w-full h-full bg-main-dark pt-10 lg:pr-10'}>
             <div className={'flex-center'}>

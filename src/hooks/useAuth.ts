@@ -52,7 +52,7 @@ export const useAuth = ({middleware, redirectIfAuthenticated}: AuthProps = {}) =
             refreshInterval: 30000 // Refresh every 30 seconds
         }
     );
-    console.log(user)
+
     // 4) Handle SWR responses
     useEffect(() => {
         if (!token) return;

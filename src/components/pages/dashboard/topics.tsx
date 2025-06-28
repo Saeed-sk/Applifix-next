@@ -70,10 +70,10 @@ export function Topics() {
 
 
     return (
-        <Table className={'px-10'}>
+        <Table className={'px-20'}>
             <TableHeader>
                 <TableRow className={'bg-gray-500 text-white'}>
-                    <TableHead className="w-[100px]">Id</TableHead>
+                    <TableHead className="w-[100px] ">Id</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Method</TableHead>
                     <TableHead>Edit</TableHead>

@@ -14,6 +14,8 @@ import React, {useEffect, useState} from "react";
 import {Topics} from "@/components/pages/dashboard/topics";
 import {useAuth} from "@/store/AuthProvider";
 import {Loader2} from "lucide-react";
+import {ContactList} from "@/components/pages/contact/contact-list";
+import {ContactCreate} from "@/components/pages/contact/contact-create";
 
 interface Props {
     chats: PaginatedResponse<ChatType>
@@ -32,7 +34,7 @@ export function UserDashboard({chats}: Props) {
     }, [loading]);
 
     if (!userIn || !user) {
-        return <Loader2 className="w-6 h-6 mx-auto animate-spin text-white "/>;
+        return <Loader2 className="w-10 h-10 mx-auto animate-spin text-white "/>;
     }
 
     return (
@@ -43,6 +45,8 @@ export function UserDashboard({chats}: Props) {
                     <TabsTrigger value="profile">Profile</TabsTrigger>
                     <TabsTrigger value="password">Password</TabsTrigger>
                     {user?.role === 'admin' && <TabsTrigger value="topics">Topics</TabsTrigger>}
+                    {/*{user?.role !== 'admin' ? <TabsTrigger value="contactList">Contact List</TabsTrigger> :*/}
+                    {/*    <TabsTrigger value="createContact">createContact</TabsTrigger>}*/}
                 </TabsList>
                 <TabsContent className="w-full h-full" value="account">
                     <UserChats chats={chats} className="" user={user}/>
@@ -57,6 +61,12 @@ export function UserDashboard({chats}: Props) {
                 </TabsContent>
                 <TabsContent value="topics">
                     <Topics/>
+                </TabsContent>
+                <TabsContent value="contactList">
+                    <ContactList/>
+                </TabsContent>
+                <TabsContent value="contactCreate">
+                    <ContactCreate/>
                 </TabsContent>
             </Tabs>
         </section>

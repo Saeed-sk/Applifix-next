@@ -9,7 +9,7 @@ type Props = {
 
 export function Title({tag: Tag = 'h1', className, children}: Props) {
     return (
-        <Tag className={cn('font-condensed text-[36px] font-medium text-primary-900', className)}>
+        <Tag className={cn('font-condensed text-20 lg:text-36 font-medium text-primary-900', className)}>
             {children}
         </Tag>
     );

@@ -39,7 +39,7 @@ export default function ImageInputPreview({
         event.preventDefault();
         document.getElementById(inputId)?.click();
     };
-    console.log(previewSrc)
+
     useEffect(() => {
         if (previewSrc) {
             setImage(previewSrc);

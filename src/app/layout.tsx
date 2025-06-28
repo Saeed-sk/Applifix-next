@@ -1,7 +1,7 @@
 import type {Metadata, Viewport} from "next";
 import "./globals.css";
 import React from "react";
-import {NavbarLg} from "@/components/layout/navbar-lg";
+import 'animate.css';
 import {Roboto} from "next/font/google";
 import {Roboto_Condensed} from "next/font/google";
 import {Navbar} from "@/components/layout/navbar";

@@ -12,12 +12,12 @@ import {env} from "@/env";
 interface ChatMessage {
     role: string;
     message: string;
-    created_at: string; // to hold message date
+    created_at?: string; // to hold message date
 }
 
 export const ChatBubble = ({msg}: { msg: ChatMessage }) => {
     const userRole = msg.role === "user";
-    const {user, loading} = useAuth()
+    const {user} = useAuth()
 
     return (
         <motion.div
@@ -42,14 +42,14 @@ export const ChatBubble = ({msg}: { msg: ChatMessage }) => {
                 >
                     <p>{msg.message}</p>
                     <div className={" mt-1 font-normal text-xs"}>
-                        {format(new Date(msg.created_at), 'yyyy-MM-dd HH:mm')}
+                        {msg.created_at && (format(new Date(msg.created_at), 'yyyy-MM-dd HH:mm'))}
                     </div>
                 </div>
                 {msg.role === 'user' && (
                     <AspectRatio
                         className={'self-end bg-white rounded-full border border-gray-300 w-[40px] lg:w-[80px] h-[40px] lg:h-[80px] flex-center p-5'}
                         ratio={1}>
-                        <Image src={user ? env.NEXT_PUBLIC_IMAGE_DIRECTORY + user.avatar : '/assets/user-avatar.svg'}
+                        <Image src={user?.avatar ? env.NEXT_PUBLIC_IMAGE_DIRECTORY + user.avatar : '/assets/user-avatar.svg'}
                                className={'static w-full h-full object-contain pt-2'}
                                fill={true} sizes={'50svw'} priority={true}
                                alt={'user avatar'}

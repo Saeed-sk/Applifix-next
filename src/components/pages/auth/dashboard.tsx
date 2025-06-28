@@ -4,7 +4,6 @@ import {UserType} from "@/types/auth";
 
 export default function DashboardPage() {
     const {user, logout} = useAuth();
-    console.log(user)
     return (
         <main>
             <div className="p-8">

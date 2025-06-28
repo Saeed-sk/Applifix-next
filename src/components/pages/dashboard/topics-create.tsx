@@ -53,22 +53,23 @@ export default function TopicModalForm({
         defaultValues: initial
             ? { title: initial.title, description: initial.description, image: undefined as any }
             : undefined,
+        mode: 'onChange',
     });
 
     const [submitting, setSubmitting] = useState(false);
     const [preview, setPreview] = useState<string | null>(initial?.src ?? null);
 
-    useEffect(() => {
-        // When initial changes (edit mode), reset form and preview
-        if (initial) {
-            reset({
-                title: initial.title,
-                description: initial.description,
-                image: undefined as any,
-            });
-            setPreview(initial.src ?? null);
-        }
-    }, [initial, reset]);
+    // useEffect(() => {
+    //     // When initial changes (edit mode), reset form and preview
+    //     if (initial) {
+    //         reset({
+    //             title: initial.title,
+    //             description: initial.description,
+    //             image: undefined as any,
+    //         });
+    //         setPreview(initial.src ?? null);
+    //     }
+    // }, [initial, reset]);
 
     const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -77,23 +78,22 @@ export default function TopicModalForm({
 
     const onSubmit = async (data: TopicFormData) => {
         setSubmitting(true);
-        const payload = new FormData();
-        payload.append('title', data.title);
-        payload.append('description', data.description);
-        if (data.image && data.image.length > 0) {
-            payload.append('image', data.image[0]);
-        }
-
         const token = Cookies.get('token');
-
+        console.log(data)
         try {
+            const payload = new FormData();
+            payload.append('title', data.title ?? initial?.title);
+            payload.append('description', data.description ?? initial?.description);
+            if (data.image && data.image.length > 0) {
+                payload.append('image', data.image[0]);
+            }
             const url = topicId ? `/api/topics/${topicId}` : '/api/topics';
-            const method: 'post' | 'put' = topicId ? 'put' : 'post';
 
             const response = await axios({
                 url,
-                method,
+                method: 'POST',
                 data: payload,
+
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -101,7 +101,7 @@ export default function TopicModalForm({
             });
 
             onSuccessAction((response.data as ApiResponse<any>).data);
-            if (!topicId) reset();
+
         } catch (err: any) {
             if (err.response) {
                 const { data: serverPayload, status } = err.response;
@@ -189,9 +189,6 @@ export default function TopicModalForm({
                     </div>
 
                     <DialogFooter className="space-x-2">
-                        <Button type="button" variant="secondary" onClick={() => reset()} disabled={submitting}>
-                            Cancel
-                        </Button>
                         <Button type="submit" disabled={submitting}>
                             {submitting ? (topicId ? 'Updating...' : 'Creating...') : topicId ? 'Update' : 'Create'}
                         </Button>

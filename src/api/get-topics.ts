@@ -7,6 +7,7 @@ export async function getTopics(page: number = 1): Promise<PaginatedResponse<Top
         const response = await axios.get<ApiResponse<PaginatedResponse<TopicType>>>(`/api/topics?page=${page}`);
         return response.data.data;
     } catch (error: any) {
+        console.log(error)
         throw new Error(error?.response?.data?.message || "Failed to fetch topics");
     }
 }

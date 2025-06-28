@@ -8,6 +8,7 @@ import {Loader2} from 'lucide-react';
 import {cn} from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
 import {AuthRoutes} from "@/api/auth-routes";
+import {motion} from 'motion/react';
 
 export type ChangePasswordType = {
     old_password: string;
@@ -67,7 +68,11 @@ export default function ChangePasswordForm({className}: { className?: string }) 
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={cn('max-w-2xl mx-auto space-y-6 mt-10', className)}>
+        <motion.form
+            initial={{translateY: 15, opacity: 0}}
+            animate={{translateY: 0, opacity: 1}}
+            transition={{duration: 0.2}}
+            onSubmit={handleSubmit(onSubmit)} className={cn('max-w-2xl mx-auto space-y-6 mt-10 lg:mt-20', className)}>
 
             <TextInput
                 label="Current Password"
@@ -125,6 +130,6 @@ export default function ChangePasswordForm({className}: { className?: string }) 
                 {loading && <Loader2 className="animate-spin"/>}
                 <span>{loading ? 'Changing...' : 'Change Password'}</span>
             </Button>
-        </form>
+        </motion.form>
     );
 }

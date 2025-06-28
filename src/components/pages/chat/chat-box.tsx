@@ -1,5 +1,5 @@
 'use client'
-import {useState, useEffect, KeyboardEvent, useRef} from "react";
+import {useState, useEffect, KeyboardEvent, useRef, Fragment} from "react";
 import {ChatBubble} from "@/components/pages/chat/chat-bubble";
 import axios from "@/lib/axios";
 import ScrollContainer from "react-indiana-drag-scroll";
@@ -7,7 +7,7 @@ import {IconSelect} from "@/components/ui/icon-select";
 import {useRouter, useSearchParams} from "next/navigation";
 import {ChatMessage} from "@/types/index.js";
 import {LimitModal} from "@/components/pages/chat/limit-modal";
-
+import {DotLoader} from "@/components/shared/dot-loader";
 
 interface Props {
     chats: ChatMessage[]
@@ -60,16 +60,19 @@ export default function Chat({chats}: Props) {
     const onKey = (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && sendMessage();
 
     return (
-        <section className="flex flex-col w-full h-[70svh] lg:h-[75svh] lg:rounded-2xl overflow-hidden chat-box-shadow">
+        <section className="flex circuit-bg bg-blue-100/20 flex-col w-full h-[70svh] lg:h-[75svh] lg:rounded-2xl overflow-hidden chat-box-shadow">
             {/* Chat messages */}
             <ScrollContainer
                 hideScrollbars={false}
-                className="flex-grow p-5 overflow-y-auto scrollbar scrollbar-thumb-primary-100 scrollbar-track-gray-50 pb-20"
+                className="flex-grow z-10 p-5 overflow-y-auto scrollbar scrollbar-thumb-primary-100 scrollbar-track-gray-50 pb-20"
             >
                 {chat.length === 0 ? (
                     <p className="text-center text-gray-400">No messages yet. Start the conversation!</p>
                 ) : (
-                    chat.map((msg, i) => <ChatBubble msg={msg} key={i}/>)
+                    <Fragment>
+                        {chat.map((msg, i) => <ChatBubble msg={msg} key={i}/>)}
+                        {loading && <DotLoader className={'ml-5 mt-10'}/>}
+                    </Fragment>
                 )}
                 <div ref={messagesEndRef}/>
             </ScrollContainer>

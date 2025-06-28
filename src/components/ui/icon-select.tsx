@@ -3,11 +3,7 @@ import React from "react";
 import {IoCloseSharp} from "react-icons/io5";
 import {LogoIconTextNone} from "@/components/ui/icons/logo-text-none";
 import {LogoIcon} from "@/components/ui/icons/logo-text";
-import {IconHome} from "@/components/ui/icons/icon-home";
 import {IconExit} from "@/components/ui/icons/icon-exit";
-import {IconList} from "@/components/ui/icons/icon-list";
-import {IconSetting} from "@/components/ui/icons/icon-setting";
-import {IconChat} from "@/components/ui/icons/icon-chat";
 import { IoNotifications } from "react-icons/io5";
 import {AiStars} from "@/components/ui/icons/icon-ai-stars";
 import {FaCalendar} from "react-icons/fa";
@@ -20,6 +16,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import {FiHome} from "react-icons/fi";
 import {RiChatAiLine} from "react-icons/ri";
 import {CiViewList} from "react-icons/ci";
+import { CiSearch } from "react-icons/ci";
 
 
 type IconComponent = React.FC<{ className?: string }>;
@@ -41,6 +38,9 @@ export const IconSelect: React.FC<Props> = ({name, className = ""}) => {
             break;
         case "login":
             DynamicComponent = IoLogIn;
+            break;
+        case "search":
+            DynamicComponent = CiSearch;
             break;
         case "chat-ai":
             DynamicComponent = ChatAIStars;
