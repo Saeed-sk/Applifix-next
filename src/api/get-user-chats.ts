@@ -7,13 +7,17 @@ export async function getUserChats(page: number = 1): Promise<PaginatedResponse<
     const cookie = await cookies()
     const token = cookie.get('token')?.value
     try {
-        const response = await axios.get<ApiResponse<PaginatedResponse<ChatType>>>(`/api/chat?page=${page}`, {
+        const response = await axios.get<ApiResponse<PaginatedResponse<ChatType>>>(`/api/chats`, {
             headers: {
                 Authorization: `Bearer ${token}`,
+            },
+            params: {
+                page: page,
             },
         });
         return response.data.data;
     } catch (error: any) {
-        throw new Error(error?.response?.data?.message || "Failed to fetch user Chats");
+        console.log(error)
+        throw new Error(error?.response?.data?.message || "Failed to fetch user chats");
     }
 }

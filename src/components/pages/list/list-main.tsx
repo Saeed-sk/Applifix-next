@@ -28,7 +28,6 @@ export const ListMain = ({ chats: initialPaginate, className }: Props) => {
         const fetchChats = async () => {
 
             try {
-                const url = `/api/chat ? '/search' : ''}`
                 const options: any = {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -38,7 +37,8 @@ export const ListMain = ({ chats: initialPaginate, className }: Props) => {
                     const resp = await axios.get<ApiResponse<ChatType[]>>(`/api/chats/search`, options)
                     setChats(resp.data.data)
                 } else {
-                    const resp = await axios.get<ApiResponse<PaginatedResponse<ChatType>>>(`/api/chat/?page=${page}`, options)
+                    options.params = { page }
+                    const resp = await axios.get<ApiResponse<PaginatedResponse<ChatType>>>(`/api/chats`, options)
                     setChats(resp.data.data.data)
                     setPaginateData(resp.data.data)
                 }
@@ -49,15 +49,9 @@ export const ListMain = ({ chats: initialPaginate, className }: Props) => {
                 setLoading(false)
             }
         }
-
         fetchChats()
     }, [page, query])
 
-    // Debounce search input
-    useEffect(() => {
-        const timer = setTimeout(() => setQuery(query.trim()), 300)
-        return () => clearTimeout(timer)
-    }, [query])
 
     return (
         <section className={cn('flex flex-col gap-4 mt-4', className)}>
