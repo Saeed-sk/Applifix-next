@@ -9,7 +9,7 @@ import {FallingText} from "@/components/shared/falling-text";
 import {ParticleBackground} from "@/components/shared/particles";
 
 export default async function Home() {
-    const topics = await getTopics();
+    const topics = await getTopics(1);
     return (
         <main
             className={'max-w-1440 w-full h-full main-background-container relative bg-main-dark z-0 text-black text-48 flex-center flex-col items-start gap-5 lg:pl-36 pt-10 px-5 lg:px-0'}>
