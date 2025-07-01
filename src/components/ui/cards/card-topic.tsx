@@ -14,6 +14,7 @@ type Props = {
 
 export function CardTopic({data, index = 0, ...props}: Props) {
     const enterActionDelay = (index * 0.3) + 0.1;
+    const imageSrc = String(env.NEXT_PUBLIC_IMAGE_DIRECTORY + data.src)
     return (
         <Link href={`/chat?topic=${data.id}`}>
             <motion.div
@@ -22,8 +23,8 @@ export function CardTopic({data, index = 0, ...props}: Props) {
                 transition={{duration: 0.5, delay: Number(enterActionDelay)}}
                 className={'bg-[#F0FFF5] group hover:drop-shadow-lg hover:!-translate-y-2 px-5 py-3 hover:transition-all gap-2 flex-center items-start w-full h-[100px] rounded-20 font-bold border border-gray-200 min-h-[85px] lg:w-full justify-start'}>
                 <AspectRatio className={'h-full !w-24 relative'}>
-                    <img className={'static !w-full h-full object-contain text-12 border border-gray-200 rounded-lg'}
-                           src={env.NEXT_PUBLIC_IMAGE_DIRECTORY + data.src}
+                    <Image className={'static !w-full h-full object-contain text-12 border border-gray-200 rounded-lg'}
+                           src={imageSrc}
                            alt={data.title}
                            width={100}
                            height={100}/>

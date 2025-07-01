@@ -17,6 +17,9 @@ export async function postChatTopic(topic_id: number): Promise<ChatMessage[]> {
         );
         return response.data.data;
     } catch (error: any) {
+        if (error?.response?.status === 429) {
+            throw new Error("LIMIT_REACHED");
+        }
         console.log(error)
         throw new Error(error?.response?.data?.message || "Failed to create chat with topic");
     }
