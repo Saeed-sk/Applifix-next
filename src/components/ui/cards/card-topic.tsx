@@ -14,7 +14,9 @@ type Props = {
 
 export function CardTopic({data, index = 0, ...props}: Props) {
     const enterActionDelay = (index * 0.3) + 0.1;
+    console.log(data.src , "data.src");
     const imageSrc = String(`${env.NEXT_PUBLIC_IMAGE_DIRECTORY}${data.src}`);
+    console.log(imageSrc , "imageSrc");
     return (
         <Link href={`/chat?topic=${data.id}`}>
             <motion.div
@@ -27,7 +29,9 @@ export function CardTopic({data, index = 0, ...props}: Props) {
                            src={imageSrc}
                            alt={data.title}
                            width={100}
-                           height={100}/>
+                           height={100}
+                           unoptimized={true}
+                    />
                 </AspectRatio>
                 <div className={'flex-center flex-col items-start'}>
                     <h2 className={'text-16 lg:text-20 font-condensed'}>
